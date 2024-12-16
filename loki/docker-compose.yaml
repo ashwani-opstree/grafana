@@ -5,17 +5,25 @@ x-logging: &default-logging
 
 services:
   loki:
-    image: grafana/loki:2.9.2
+    image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
+    volumes: 
+      - ./etc/loki/:/etc/loki/
+      - loki:/loki
     ports:
       - "3100:3100"
 
   grafana:
-    image: grafana/grafana:10.2.0
+    image: grafana/grafana:latest
     ports:
       - "3000:3000"
     volumes:
       - ./etc/grafana/:/etc/grafana/provisioning/datasources
+      - grafana:/var/lib/grafana
     depends_on:
       - loki
     logging: *default-logging
+
+volumes:
+  grafana:
+  loki:
